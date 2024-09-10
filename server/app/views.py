@@ -118,3 +118,18 @@ def withdraw_job_application(request, application_id):
         return JsonResponse({'message': 'Job application withdrawn successfully.'}, status=status.HTTP_204_NO_CONTENT)
     except JobApplication.DoesNotExist:
         return JsonResponse({'error': 'Job application not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def schedule_interview(request, application_id):
+    try:
+        job_application = JobApplication.objects.get(id=application_id)
+    except JobApplication.DoesNotExist:
+        return JsonResponse({'error': 'Job application not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'POST':
+        interview_date = request.data.get('interview_date')
+        if not interview_date:
+            return JsonResponse({'error': 'Interview date is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        # Assumed here that you will save the interview schedule to a related model or field.
+        # Placeholder for saving logic, e.g., job_application.schedule_interview(interview_date)
+        return JsonResponse({'message': 'Interview scheduled successfully.', 'interview_date': interview_date}, status=status.HTTP_201_CREATED)
