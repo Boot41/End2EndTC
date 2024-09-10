@@ -17,6 +17,7 @@ class JobListingTests(TestCase):
         self.invalid_data = {
             'title': '',
         }
+        self.job_listing = JobListing.objects.create(**self.valid_data)
 
     def test_create_job_listing_success(self):
         response = self.client.post(reverse('create_job'), self.valid_data)
@@ -27,7 +28,31 @@ class JobListingTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_job_listings(self):
-        job = JobListing.objects.create(**self.valid_data)
         response = self.client.get(reverse('get_jobs', kwargs={'employer_id': 1}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn(job.title.encode(), response.content)
+        self.assertIn(self.job_listing.title.encode(), response.content)
+
+    def test_update_job_listing_success(self):
+        update_data = {
+            'title': 'Senior Software Engineer',
+            'description': 'Develop and lead software projects.',
+            'company': 'Tech Corp',
+            'location': 'Remote'
+        }
+        response = self.client.put(reverse('update_job', kwargs={'job_id': self.job_listing.id}), update_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.job_listing.refresh_from_db()
+        self.assertEqual(self.job_listing.title, 'Senior Software Engineer')
+
+    def test_update_job_listing_not_found(self):
+        response = self.client.put(reverse('update_job', kwargs={'job_id': 999}), self.valid_data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_job_listing_success(self):
+        response = self.client.delete(reverse('delete_job', kwargs={'job_id': self.job_listing.id}))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(JobListing.objects.filter(id=self.job_listing.id).exists())
+
+    def test_delete_job_listing_not_found(self):
+        response = self.client.delete(reverse('delete_job', kwargs={'job_id': 999}))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
