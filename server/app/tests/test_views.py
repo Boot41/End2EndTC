@@ -40,3 +40,27 @@ class JobApplicationTests(TestCase):
         response = self.client.get(reverse('track_applications', kwargs={'seeker_id': 1}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, [])
+
+    def test_update_job_application_success(self):
+        application = JobApplication.objects.create(job_listing=self.job_listing, seeker_id=1)
+        response = self.client.put(reverse('update_application', kwargs={'application_id': application.id}), {'status': 'Accepted'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['status'], 'Accepted')
+
+    def test_update_job_application_invalid_status(self):
+        application = JobApplication.objects.create(job_listing=self.job_listing, seeker_id=1)
+        response = self.client.put(reverse('update_application', kwargs={'application_id': application.id}), {'status': 'InvalidStatus'})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_update_job_application_not_found(self):
+        response = self.client.put(reverse('update_application', kwargs={'application_id': 999}), {'status': 'Accepted'})
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_withdraw_job_application_success(self):
+        application = JobApplication.objects.create(job_listing=self.job_listing, seeker_id=1)
+        response = self.client.delete(reverse('withdraw_application', kwargs={'application_id': application.id}))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_withdraw_job_application_not_found(self):
+        response = self.client.delete(reverse('withdraw_application', kwargs={'application_id': 999}))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

@@ -94,3 +94,27 @@ def track_applications(request, seeker_id):
         applications = JobApplication.objects.filter(seeker_id=seeker_id)
         application_data = [{'job_listing_id': app.job_listing.id, 'status': app.status} for app in applications]
         return JsonResponse(application_data, safe=False, status=status.HTTP_200_OK)
+
+@api_view(['PUT'])
+def update_job_application(request, application_id):
+    try:
+        job_application = JobApplication.objects.get(id=application_id)
+    except JobApplication.DoesNotExist:
+        return JsonResponse({'error': 'Job application not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        status = request.data.get('status', None)
+        if status in ['Accepted', 'Rejected', 'Pending']:
+            job_application.status = status
+            job_application.save()
+            return JsonResponse({'status': job_application.status}, status=status.HTTP_200_OK)
+        return JsonResponse({'error': 'Invalid status provided.'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def withdraw_job_application(request, application_id):
+    try:
+        job_application = JobApplication.objects.get(id=application_id)
+        job_application.delete()
+        return JsonResponse({'message': 'Job application withdrawn successfully.'}, status=status.HTTP_204_NO_CONTENT)
+    except JobApplication.DoesNotExist:
+        return JsonResponse({'error': 'Job application not found.'}, status=status.HTTP_404_NOT_FOUND)
