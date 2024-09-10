@@ -12,7 +12,6 @@ function App() {
         <header className="App-header">
           {/* Removed unnecessary code as per instructions */}
         </header>
-        {/* Define routes for your application */}
         <Routes>
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
           {/* Other routes can be added here */}
