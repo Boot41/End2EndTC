@@ -21,6 +21,28 @@ def get_job_listings(request, employer_id):
         serializer = JobListingSerializer(job_listings, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def fetch_job_listings(request):
+    if request.method == 'GET':
+        title = request.GET.get('title', None)
+        location = request.GET.get('location', None)
+        job_type = request.GET.get('type', None)
+        posted_date = request.GET.get('posted_date', None)
+
+        filters = {}
+        if title:
+            filters['title__icontains'] = title
+        if location:
+            filters['location__icontains'] = location
+        if job_type:
+            filters['type'] = job_type  # Assuming 'type' is a field in the model
+        if posted_date:
+            filters['created_at__date'] = posted_date
+
+        job_listings = JobListing.objects.filter(**filters)
+        serializer = JobListingSerializer(job_listings, many=True)
+        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+
 @api_view(['PUT'])
 def update_job_listing(request, job_id):
     try:

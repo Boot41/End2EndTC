@@ -12,7 +12,8 @@ class JobListingTests(TestCase):
             'title': 'Software Engineer',
             'description': 'Develop and maintain software applications.',
             'company': 'Tech Corp',
-            'location': 'Remote'
+            'location': 'Remote',
+            'type': 'Full-Time'
         }
         self.invalid_data = {
             'title': '',
@@ -32,12 +33,23 @@ class JobListingTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn(self.job_listing.title.encode(), response.content)
 
+    def test_fetch_job_listings_with_filters(self):
+        response = self.client.get(reverse('fetch_jobs'), {'title': 'Software', 'location': 'Remote'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn(self.job_listing.title.encode(), response.content)
+
+    def test_fetch_job_listings_empty(self):
+        response = self.client.get(reverse('fetch_jobs'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [])
+
     def test_update_job_listing_success(self):
         update_data = {
             'title': 'Senior Software Engineer',
             'description': 'Develop and lead software projects.',
             'company': 'Tech Corp',
-            'location': 'Remote'
+            'location': 'Remote',
+            'type': 'Full-Time'
         }
         response = self.client.put(reverse('update_job', kwargs={'job_id': self.job_listing.id}), update_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

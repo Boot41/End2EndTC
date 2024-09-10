@@ -12,7 +12,8 @@ class JobListingModelTests(TestCase):
             title='Product Manager',
             description='Manage the product lifecycle.',
             company='Innovate LLC',
-            location='New York'
+            location='New York',
+            type='Part-Time'
         )
         self.assertIsInstance(job, JobListing)
         self.assertEqual(job.title, 'Product Manager')
