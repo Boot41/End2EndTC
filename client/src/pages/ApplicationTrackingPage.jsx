@@ -1,75 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ApplicationStatusTracker from './ApplicationStatusTracker';
+import WithdrawApplicationButton from './WithdrawApplicationButton';
 
-// Header Component
-const Header = () => (
-  <header className="fixed top-0 left-0 w-full bg-blue-600 text-white p-4 flex justify-between items-center">
-    <h1 className="font-bold text-lg">Application Tracking</h1>
-    <nav>
-      <ul className="flex space-x-4">
-        <li><a href="#status" className="hover:underline">Status</a></li>
-        <li><a href="#help" className="hover:underline">Help</a></li>
-        <li><a href="#contact" className="hover:underline">Contact Us</a></li>
-      </ul>
-    </nav>
-  </header>
-);
+const ApplicationTrackingPage = () => {
+  const [isModalOpen, setModalOpen] = useState(false);
 
-// ApplicationStatusTracker Component
-const ApplicationStatusTracker = () => {
-  const applications = [
-    { title: "Frontend Developer", company: "Company A", date: "2023-01-15", status: "Applied" },
-    { title: "Backend Developer", company: "Company B", date: "2023-02-10", status: "Interviewed" },
-    { title: "Full Stack Developer", company: "Company C", date: "2023-03-05", status: "Offered" },
-  ];
+  const handleWithdrawClick = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  const confirmWithdrawal = () => {
+    // Logic for withdrawing the application
+    setModalOpen(false);
+  };
 
   return (
-    <div className="p-4">
-      <h2 className="font-bold mb-2">Your Applications</h2>
-      <div className="mb-4">
-        <label htmlFor="filter" className="block mb-1">Filter by Status:</label>
-        <select id="filter" className="p-1 border">
-          <option>All</option>
-          <option>Applied</option>
-          <option>Interviewed</option>
-          <option>Offered</option>
-        </select>
-      </div>
-      <ul className="space-y-4">
-        {applications.map((app, index) => (
-          <li key={index} className="border p-2">
-            <h3 className="font-bold">{app.title} at {app.company}</h3>
-            <p>Application Date: {app.date}</p>
-            <p>Status: {app.status}</p>
-            <button className="mt-2 bg-blue-600 text-white py-1 px-3" aria-label={`View details for ${app.title}`}>
-              View Details
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="flex flex-col h-screen bg-white">
+      <header className="fixed top-0 left-0 right-0 bg-gray-800 text-white p-4 flex justify-between items-center">
+        <h1 className="text-lg font-bold">Application Tracker</h1>
+        <button className="bg-red-500 p-2 rounded" aria-label="Logout">Logout</button>
+      </header>
+      <main className="mt-16 flex-grow p-4 flex flex-col items-center justify-center">
+        <ApplicationStatusTracker />
+        <WithdrawApplicationButton onClick={handleWithdrawClick} />
+      </main>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50" role="dialog" aria-modal="true">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-lg font-bold">Confirm Withdrawal</h2>
+            <p>Are you sure you want to withdraw your application?</p>
+            <div className="flex justify-between mt-4">
+              <button onClick={confirmWithdrawal} className="bg-green-500 text-white px-4 py-2 rounded">Yes</button>
+              <button onClick={closeModal} className="bg-gray-300 px-4 py-2 rounded">No</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
-
-// Footer Component
-const Footer = () => (
-  <footer className="bg-gray-200 text-center p-4 mt-4">
-    <p>&copy; 2023 Application Tracker. All Rights Reserved.</p>
-    <div>
-      <a href="#help" className="text-blue-600 hover:underline">Help</a> | 
-      <a href="#contact" className="text-blue-600 hover:underline"> Contact Us</a>
-    </div>
-  </footer>
-);
-
-// Main Page Layout
-const ApplicationTrackingPage = () => (
-  <div className="min-h-screen bg-white pt-16">
-    <Header />
-    <main className="mt-4">
-      <ApplicationStatusTracker />
-    </main>
-    <Footer />
-  </div>
-);
 
 export default ApplicationTrackingPage;

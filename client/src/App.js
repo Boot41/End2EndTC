@@ -8,7 +8,7 @@ import JobSearchPage from './pages/JobSearchPage';
 import JobDetailPage from './pages/JobDetailPage';
 import JobApplicationPage from './pages/JobApplicationPage'; 
 import ApplicationTrackingPage from './pages/ApplicationTrackingPage'; 
-import EditApplicationPage from './pages/EditApplicationPage'; // Importing the new page
+import EditApplicationPage from './pages/EditApplicationPage';
 
 function App() {
   return (
@@ -16,7 +16,6 @@ function App() {
       <Header />
       <div className="App">
         <header className="App-header">
-          {/* Removed unnecessary code as per instructions */}
         </header>
         <Routes>
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
@@ -25,7 +24,7 @@ function App() {
           <Route path="/job-detail" element={<JobDetailPage />} />
           <Route path="/job-application" element={<JobApplicationPage />} /> 
           <Route path="/application-tracking" element={<ApplicationTrackingPage />} />
-          <Route path="/edit-application" element={<EditApplicationPage />} /> {/* Added the new route */}
+          <Route path="/edit-application" element={<EditApplicationPage />} />
         </Routes>
       </div>
       <Footer />
