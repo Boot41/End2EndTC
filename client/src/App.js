@@ -6,7 +6,8 @@ import EmployerDashboard from './pages/EmployerDashboard';
 import EditJobPage from './pages/EditJobPage';
 import JobSearchPage from './pages/JobSearchPage';
 import JobDetailPage from './pages/JobDetailPage';
-import JobApplicationPage from './pages/JobApplicationPage'; // Import the new page
+import JobApplicationPage from './pages/JobApplicationPage'; 
+import ApplicationTrackingPage from './pages/ApplicationTrackingPage'; // Import the new page
 
 function App() {
   return (
@@ -21,7 +22,8 @@ function App() {
           <Route path="/edit-job" element={<EditJobPage />} />
           <Route path="/job-search" element={<JobSearchPage />} />
           <Route path="/job-detail" element={<JobDetailPage />} />
-          <Route path="/job-application" element={<JobApplicationPage />} /> {/* Added the new route */}
+          <Route path="/job-application" element={<JobApplicationPage />} /> 
+          <Route path="/application-tracking" element={<ApplicationTrackingPage />} /> {/* Added the new route */}
         </Routes>
       </div>
       <Footer />
