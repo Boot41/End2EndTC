@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import EmployerDashboard from './pages/EmployerDashboard';
 import EditJobPage from './pages/EditJobPage';
+import JobSearchPage from './pages/JobSearchPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
           <Route path="/edit-job" element={<EditJobPage />} />
+          <Route path="/job-search" element={<JobSearchPage />} />
           {/* Other routes can be added here */}
         </Routes>
       </div>
