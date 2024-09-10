@@ -18,7 +18,6 @@ function App() {
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
           <Route path="/edit-job" element={<EditJobPage />} />
           <Route path="/job-search" element={<JobSearchPage />} />
-          {/* Other routes can be added here */}
         </Routes>
       </div>
       <Footer />
