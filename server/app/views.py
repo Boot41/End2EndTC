@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
-from .models import JobListing
+from .models import JobListing, JobApplication
 from .serializers import JobListingSerializer
 
 @api_view(['POST'])
@@ -35,7 +35,7 @@ def fetch_job_listings(request):
         if location:
             filters['location__icontains'] = location
         if job_type:
-            filters['type'] = job_type  # Assuming 'type' is a field in the model
+            filters['type'] = job_type
         if posted_date:
             filters['created_at__date'] = posted_date
 
@@ -74,3 +74,23 @@ def delete_job_listing(request, job_id):
         return JsonResponse({'message': 'Job listing deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
     except JobListing.DoesNotExist:
         return JsonResponse({'error': 'Job listing not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def apply_for_job(request, job_id):
+    if request.method == 'POST':
+        seeker_id = request.data.get('seeker_id')
+        if seeker_id is None:
+            return JsonResponse({'error': 'Seeker ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            job_listing = JobListing.objects.get(id=job_id)
+            application = JobApplication.objects.create(job_listing=job_listing, seeker_id=seeker_id)
+            return JsonResponse({'id': application.id, 'status': application.status}, status=status.HTTP_201_CREATED)
+        except JobListing.DoesNotExist:
+            return JsonResponse({'error': 'Job listing not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def track_applications(request, seeker_id):
+    if request.method == 'GET':
+        applications = JobApplication.objects.filter(seeker_id=seeker_id)
+        application_data = [{'job_listing_id': app.job_listing.id, 'status': app.status} for app in applications]
+        return JsonResponse(application_data, safe=False, status=status.HTTP_200_OK)

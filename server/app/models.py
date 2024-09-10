@@ -12,3 +12,12 @@ class JobListing(models.Model):
 
     def __str__(self):
         return self.title
+
+class JobApplication(models.Model):
+    job_listing = models.ForeignKey(JobListing, on_delete=models.CASCADE)
+    seeker_id = models.IntegerField()  # Assuming seeker_id is an integer
+    applied_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=50, default='Pending')  # 'Pending', 'Accepted', 'Rejected'
+
+    def __str__(self):
+        return f'{self.seeker_id} applied for {self.job_listing.title}'
