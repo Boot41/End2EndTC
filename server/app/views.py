@@ -43,6 +43,15 @@ def fetch_job_listings(request):
         serializer = JobListingSerializer(job_listings, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def fetch_job(request, job_id):
+    try:
+        job_listing = JobListing.objects.get(id=job_id)
+        serializer = JobListingSerializer(job_listing)
+        return JsonResponse(serializer.data, status=status.HTTP_200_OK)
+    except JobListing.DoesNotExist:
+        return JsonResponse({'error': 'Job listing not found.'}, status=status.HTTP_404_NOT_FOUND)
+
 @api_view(['PUT'])
 def update_job_listing(request, job_id):
     try:

@@ -43,6 +43,15 @@ class JobListingTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, [])
 
+    def test_fetch_job_success(self):
+        response = self.client.get(reverse('fetch_job', kwargs={'job_id': self.job_listing.id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], self.job_listing.title)
+
+    def test_fetch_job_not_found(self):
+        response = self.client.get(reverse('fetch_job', kwargs={'job_id': 999}))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
     def test_update_job_listing_success(self):
         update_data = {
             'title': 'Senior Software Engineer',
